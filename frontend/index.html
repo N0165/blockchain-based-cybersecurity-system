@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Threat Intelligence Sharing</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" defer></script>
+    <script src="js/app.js" defer></script>
+  </head>
+  <body>
+    <header>
+      <h1>Blockchain Threat Intelligence</h1>
+      <nav id="nav-guest" class="hidden">
+        <button type="button" id="btn-show-auth" class="active">Login / Register</button>
+      </nav>
+      <nav id="nav-authed" class="hidden">
+        <button type="button" data-view="dash">Dashboard</button>
+        <button type="button" id="btn-submit" data-view="submit">Submit Report</button>
+        <button type="button" data-view="list">View Threats</button>
+        <button type="button" data-view="verify">Verify</button>
+        <button type="button" id="btn-logout">Logout</button>
+      </nav>
+      <span id="user-pill" class="user-pill"></span>
+    </header>
+
+    <main>
+      <section id="view-auth" class="panel">
+        <h2>Login</h2>
+        <p class="user-pill">Educational prototype — use strong passwords only on trusted networks.</p>
+        <div id="auth-msg" class="msg hidden"></div>
+        <div class="form-grid" style="max-width: 400px">
+          <form id="form-login">
+            <label>Username <input id="login-user" required autocomplete="username" /></label>
+            <label>Password <input id="login-pass" type="password" required autocomplete="current-password" /></label>
+            <button type="submit" class="primary">Login</button>
+          </form>
+        </div>
+        <h2 style="margin-top: 2rem">Register</h2>
+        <div class="form-grid" style="max-width: 400px">
+          <form id="form-register">
+            <label>Username <input id="reg-user" required minlength="3" /></label>
+            <label>Password <input id="reg-pass" type="password" required minlength="8" /></label>
+            <label>Organization name <input id="reg-org" placeholder="Required if role is Organization" /></label>
+            <label
+              >Role
+              <select id="reg-role">
+                <option value="analyst">Analyst (read-only)</option>
+                <option value="organization">Organization (submit + blockchain)</option>
+              </select>
+            </label>
+            <button type="submit" class="primary">Register</button>
+          </form>
+        </div>
+      </section>
+
+      <section id="view-dash" class="panel hidden">
+        <h2>Dashboard</h2>
+        <div id="dash-msg" class="msg hidden"></div>
+        <p>
+          Total threats: <strong id="stat-total">0</strong> · Phishing:
+          <strong id="stat-phishing">0</strong> · Malware:
+          <strong id="stat-malware">0</strong> · DDoS:
+          <strong id="stat-ddos">0</strong> · On-chain anchors:
+          <strong id="stat-chain">0</strong>
+        </p>
+        <div class="chart-wrap">
+          <canvas id="chart-types" height="220"></canvas>
+        </div>
+        <h3>Recent threats</h3>
+        <table id="table-recent">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Type</th>
+              <th>Organization</th>
+              <th>Report hash</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </section>
+
+      <section id="view-submit" class="panel hidden">
+        <h2>Submit threat intelligence</h2>
+        <div id="submit-msg" class="msg hidden"></div>
+        <form id="form-threat" class="form-grid">
+          <label>Organization name <input id="t-org" required /></label>
+          <label>Attack title <input id="t-title" required /></label>
+          <label
+            >Attack type
+            <select id="t-type" required>
+              <option value="DDoS">DDoS</option>
+              <option value="Phishing">Phishing</option>
+              <option value="Malware">Malware</option>
+              <option value="Ransomware">Ransomware</option>
+              <option value="SQL Injection">SQL Injection</option>
+              <option value="Insider Threat">Insider Threat</option>
+              <option value="Supply Chain">Supply Chain</option>
+              <option value="Other">Other</option>
+            </select>
+          </label>
+          <label>IOC — IPs (comma-separated) <input id="t-ioc-ip" placeholder="203.0.113.5" /></label>
+          <label>IOC — Hashes <input id="t-ioc-hash" placeholder="sha256:..." /></label>
+          <label>IOC — Domains <input id="t-ioc-dom" placeholder="evil.example" /></label>
+          <label>Attack description <textarea id="t-desc" required></textarea></label>
+          <label>How the attack happened <textarea id="t-how" required></textarea></label>
+          <label>Impact <textarea id="t-impact" required></textarea></label>
+          <label>Mitigation steps <textarea id="t-mit" required></textarea></label>
+          <label>Date of attack <input id="t-date" type="date" required /></label>
+          <button type="submit" class="primary">Submit & anchor on chain</button>
+        </form>
+      </section>
+
+      <section id="view-list" class="panel hidden">
+        <h2>Shared threat intelligence</h2>
+        <div id="list-msg" class="msg hidden"></div>
+        <label
+          >Filter by type
+          <select id="filter-type">
+            <option value="">All</option>
+            <option value="DDoS">DDoS</option>
+            <option value="Phishing">Phishing</option>
+            <option value="Malware">Malware</option>
+            <option value="Ransomware">Ransomware</option>
+            <option value="SQL Injection">SQL Injection</option>
+            <option value="Insider Threat">Insider Threat</option>
+            <option value="Supply Chain">Supply Chain</option>
+            <option value="Other">Other</option>
+          </select>
+        </label>
+        <table id="table-threats" style="margin-top: 1rem">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Type</th>
+              <th>Org</th>
+              <th>Hash</th>
+              <th>IPFS</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </section>
+
+      <section id="view-verify" class="panel hidden">
+        <h2>Verify report integrity</h2>
+        <p class="user-pill">Compares the Keccak256 content hash against the on-chain registry.</p>
+        <div id="verify-msg" class="msg hidden"></div>
+        <form id="form-verify" class="form-grid" style="max-width: 640px">
+          <label>Report hash (0x + 64 hex) <input id="verify-hash" placeholder="0x..." required /></label>
+          <button type="submit" class="primary">Verify</button>
+        </form>
+        <pre id="verify-detail" style="background: #0d1218; padding: 1rem; border-radius: 8px; overflow: auto"></pre>
+      </section>
+    </main>
+
+    <footer>Prototype for cybersecurity education — not for production use without hardening.</footer>
+  </body>
+</html>

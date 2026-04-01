@@ -1,0 +1,13 @@
+# Python 3.10+ recommended (3.9 works with compatible typing)
+python-dotenv>=1.0.0
+flask>=3.0.0
+flask-sqlalchemy>=3.1.0
+flask-cors>=4.0.0
+werkzeug>=3.0.0
+PyJWT>=2.8.0
+web3>=6.11.0
+eth-account>=0.10.0
+eth-utils>=2.3.0
+cryptography>=42.0.0
+ipfshttpclient>=0.7.0,<0.8.0
+psycopg2-binary>=2.9.9

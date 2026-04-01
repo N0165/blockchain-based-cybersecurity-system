@@ -1,0 +1,30 @@
+# Optional services: PostgreSQL + IPFS (Kubo) for full-stack local demo.
+# Usage: docker compose up -d
+# Then set DATABASE_URL and IPFS_API in backend/.env (see README).
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: threat
+      POSTGRES_PASSWORD: threat_dev
+      POSTGRES_DB: threat_intel
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  ipfs:
+    image: ipfs/kubo:latest
+    ports:
+      - "4001:4001"
+      - "5001:5001"
+      - "8080:8080"
+    volumes:
+      - ipfs_staging:/export
+      - ipfs_data:/data/ipfs
+
+volumes:
+  pgdata:
+  ipfs_staging:
+  ipfs_data:

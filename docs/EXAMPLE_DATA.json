@@ -1,0 +1,16 @@
+{
+  "description": "Example body for POST /api/submitThreat (with Authorization: Bearer <token>). Organization users should match registered organization name.",
+  "sample": {
+    "organization_name": "Demo Security Org",
+    "attack_title": "Credential phishing against finance staff",
+    "attack_type": "Phishing",
+    "ioc_ips": "198.51.100.10",
+    "ioc_hashes": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "ioc_domains": "secure-login-fake.example",
+    "attack_description": "Targeted emails impersonating IT with fake SSO portal.",
+    "how_it_happened": "Users clicked link; credentials entered on attacker-controlled page.",
+    "impact": "Two accounts compromised; no lateral movement observed.",
+    "mitigation": "Reset passwords, MFA enforcement, user awareness block.",
+    "date_of_attack": "2026-03-15"
+  }
+}
